@@ -13,7 +13,8 @@ require 'src/states/BaseState'
 
 require 'src/states/game/MainMenu'
 require 'src/states/game/PlayState'
-require 'src/states/game/Intro'
+require 'src/states/game/Intro' 
+require 'src/states/game/QuestionSet'
 --require 'src/states/game/Credits'
 Timer = require 'knife.timer' 
 
