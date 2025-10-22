@@ -6,7 +6,7 @@ function QuestionSet:init(startIndex, player)
     self.player = player -- store player object
 
     self.questions = {{
-        text = "Bought a cute dress/ nice T-shirt during a Myntra Sale on a great deal?",
+        text = "Bought a cute dress nice T-shirt during a Myntra Sale on a great deal?",
         price = 800,
         category = "Fashion"
     }, {
@@ -30,7 +30,7 @@ function QuestionSet:init(startIndex, player)
         price = 400,
         category = "Lifestyle"
     }, {
-        text = "Bought a gadget during Amazon’s Big Bang Sale because of the mega discount?",
+        text = "Bought a gadget during Amazon Big Bang Sale because of the mega discount?",
         price = 1500,
         category = "Tech"
     }, {

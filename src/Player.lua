@@ -3,12 +3,12 @@ Player = Class {
 }
 
 function Player:init(x, y) 
-    frameW, frameH = 614, 564 
+    frameW, frameH = 256,256
     self.carObj = Car()
     self.x = 200
     self.y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 
-    self.width = frameW*0.2
-    self.height = frameH*0.3
+    self.width = 256*0.7
+    self.height = 256
     self.speed = 420
     -- self.direction = 'right'
     self.state = 'idle'
@@ -23,7 +23,7 @@ function Player:init(x, y)
 
     self.purchased = {}
 
-    self.spriteSheet = love.graphics.newImage('Image/Sprite-0002.png')
+    self.spriteSheet = love.graphics.newImage('Image/Girl.png')
 
     -- your frame size
     local grid = anim8.newGrid(frameW, frameH, self.spriteSheet:getWidth(), self.spriteSheet:getHeight())
@@ -33,12 +33,12 @@ function Player:init(x, y)
     local totalStyles = 1 -- number of character variations (rows)
 
     for row = 1, totalStyles do
-        self.styles[row] = {
-            idle = anim8.newAnimation(grid('1-13', row), 0.05),
+        self.styles[row]= {
+            idle = anim8.newAnimation(grid('1-1', 1), 0.05),
             -- walkLeft = anim8.newAnimation(grid('4-6', row), 0.1),
-            walkRight = anim8.newAnimation(grid('16-29', row), 0.03)
-        }
-    end
+            walkRight = anim8.newAnimation(grid('1-6', 1), 0.1)
+        } 
+   end
 
     self.currentStyle = 1
     self.currentAnimation = self.styles[self.currentStyle].idle
@@ -122,15 +122,35 @@ function Player:render()
     local scaleX = 0.3
     local offsetX = 0
 
-    local frameW = 614 -- your frame width
+    local frameW = 184.2 -- your frame width
 
-    self.currentAnimation:draw(self.spriteSheet, self.x, self.y, 0, -- rotation
-    0.3 * self.direction, -- flip if moving left
-    0.3, -- y scale
-    614 / 2 * 0.2 - 160 * self.direction, -- origin x for flip
+    self.currentAnimation:draw(self.spriteSheet, self.x+100, self.y, 0, -- rotation
+    0.7 * self.direction, -- flip if moving left
+    0.7, -- y scale
+    256/2-1* self.direction, -- origin x for flip
     0 -- origin y
-    )
-    love.graphics.rectangle('line', self.x, self.y, 614 * 0.2, 564 * 0.3) 
+    ) 
+    
+    love.graphics.setColor(1,0.5,0.1) 
+
+    if self.x <=7700 then 
+        self.currentAnimation:draw(self.spriteSheet, 8000, self.y, 0, -- rotation
+        0.7 * self.direction, -- flip if moving left
+        0.7, -- y scale
+        256/2-1* self.direction, -- origin x for flip
+        0 -- origin y
+        ) 
+    else  
+        self.currentAnimation:draw(self.spriteSheet,self.x+300 , self.y, 0, -- rotation
+        0.7 * self.direction, -- flip if moving left
+        0.7, -- y scale
+        256/2-1* self.direction, -- origin x for flip
+        0 -- origin y
+        ) 
+    end
+
+    love.graphics.setColor(1,1,1)
+    love.graphics.rectangle('line', self.x, self.y, self.width,self.height) 
     self.carObj:render()
 end
 
@@ -143,8 +163,8 @@ end
 
 function Player:collides(target)
     return self.x < target.x + target.width and
-           self.x + frameW * 0.2 > target.x and
+           self.x + frameW  > target.x and
            self.y < target.y + target.height and
-           self.y + frameH * 0.3 > target.y
+           self.y + frameH > target.y
 end
 
