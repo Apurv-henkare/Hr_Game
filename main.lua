@@ -55,5 +55,6 @@ end
 function love.draw()
     -- push:start() 
     gStateStack:render()
+    
     -- push:finish()
 end

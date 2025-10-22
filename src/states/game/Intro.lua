@@ -4,7 +4,7 @@ Intro = Class {
 
 function Intro:init()
    -- self.player = Player()
-    self.background = love.graphics.newImage('Image/planetbg.png')
+    --self.background = love.graphics.newImage('Image/planetbg.png')
     self.text = "Planet Name: Nuvex-7 \n\n \n A remote, mineral-rich planet operated entirely by AI and robotic systems.\n\n Owned by the interstellar mining corporation Xylem Corp., the planet was a critical source of rare minerals for Earth.\n\nOne day, Nuvex-7 went completely silent. No shipments. No signals.\n\n You a corporate innovation agent are deployed to investigate."
     self.currentTextLength = 0
     self.textTimer = 0 

@@ -3,25 +3,69 @@ QuestionSet = Class {
 }
 
 function QuestionSet:init(startIndex, player)
-    self.player = player  -- store player object
+    self.player = player -- store player object
 
-    self.questions = {
-        { text = "Bought a cute dress/ nice T-shirt during a Myntra Sale on a great deal?", price = 800 },
-        { text = "Ordered food on Swiggy, because food at home was boring?", price = 300 },
-        { text = "Bought something from an ad on Instagram because it caught your eye?", price = 500 },
-        { text = "Purchased the same dress your friend wore at a party to match their style?", price = 1000 },
-        { text = "Went to a concert only because your friends were going?", price = 1200 },
-        { text = "Rewatched a movie in the theatre to accompany a friend?", price = 400 },
-        { text = "Bought a gadget during Amazon s Big Bang Sale because of the mega discount?", price = 1500 },
-        { text = "Spent extra to waive off credit card charges?", price = 600 },
-        { text = "Got a Starbucks coffee while waiting for a friend?", price = 350 },
-        { text = "Tried a new hair treatment because your hairdresser recommended it?", price = 900 },
-        { text = "Bought a cookie at the mall because of a sudden sweet craving?", price = 150 },
-        { text = "Gave a gift to a child on impulse?", price = 500 },
-        { text = "Took a cab or rickshaw instead of walking a short distance?", price = 200 },
-        { text = "Bought vegetables just because they were cheap?", price = 100 },
-        { text = "Spent money on online games after hitting a limit, just to keep playing?", price = 700 }
-    }
+    self.questions = {{
+        text = "Bought a cute dress/ nice T-shirt during a Myntra Sale on a great deal?",
+        price = 800,
+        category = "Fashion"
+    }, {
+        text = "Ordered food on Swiggy, because food at home was boring?",
+        price = 300,
+        category = "Food and Lifestyle"
+    }, {
+        text = "Bought something from an ad on Instagram because it caught your eye?",
+        price = 500,
+        category = "Lifestyle"
+    }, {
+        text = "Purchased the same dress your friend wore at a party to match their style?",
+        price = 1000,
+        category = "Fashion"
+    }, {
+        text = "Went to a concert only because your friends were going?",
+        price = 1200,
+        category = "Lifestyle"
+    }, {
+        text = "Rewatched a movie in the theatre to accompany a friend?",
+        price = 400,
+        category = "Lifestyle"
+    }, {
+        text = "Bought a gadget during Amazon’s Big Bang Sale because of the mega discount?",
+        price = 1500,
+        category = "Tech"
+    }, {
+        text = "Spent extra to waive off credit card charges?",
+        price = 600,
+        category = "Lifestyle"
+    }, {
+        text = "Got a Starbucks coffee while waiting for a friend?",
+        price = 350,
+        category = "Food and Lifestyle"
+    }, {
+        text = "Tried a new hair treatment because your hairdresser recommended it?",
+        price = 900,
+        category = "Health"
+    }, {
+        text = "Bought a cookie at the mall because of a sudden sweet craving?",
+        price = 150,
+        category = "Food and Lifestyle"
+    }, {
+        text = "Gave a gift to a child on impulse?",
+        price = 500,
+        category = "Lifestyle"
+    }, {
+        text = "Took a cab or rickshaw instead of walking a short distance?",
+        price = 200,
+        category = "Lifestyle"
+    }, {
+        text = "Bought vegetables just because they were cheap?",
+        price = 100,
+        category = "Food and Lifestyle"
+    }, {
+        text = "Spent money on online games after hitting a limit, just to keep playing?",
+        price = 700,
+        category = "Tech"
+    }}
 
     self.currentIndex = startIndex or 1
     self.currentText = ""
@@ -80,10 +124,12 @@ function QuestionSet:render()
     love.graphics.setColor(1, 1, 1)
     love.graphics.setFont(love.graphics.newFont(18))
 
-    if self.transactionComplete then
-        love.graphics.printf("Transaction COMPLETE! Remaining money: " .. self.player.money .. " | Press Enter to continue.", 50, 100, 800, "center")
+    if self.transactionComplete then 
+        love.graphics.printf("Transaction COMPLETE! Remaining money: " .. self.player.money ..
+                                 " | Press Enter to continue.", 50, 100, 800, "center")
     elseif self.failed then
-        love.graphics.printf("Transaction FAILED! Not enough money: " .. self.player.money .. " | Press Enter to continue.", 50, 100, 800, "center")
+        love.graphics.printf("Transaction FAILED! Not enough money: " .. self.player.money ..
+                                 " | Press Enter to continue.", 50, 100, 800, "center")
     elseif self.cancelled then
         love.graphics.printf("No Transaction Performed! Press Enter to continue.", 50, 100, 800, "center")
     else
@@ -103,7 +149,12 @@ function QuestionSet:performTransaction()
     if self.player.money >= price then
         self.player.money = self.player.money - price
         print("Transaction CONFIRMED! Remaining money: " .. self.player.money)
-        self.transactionComplete = true
+        self.transactionComplete = true 
+
+        table.insert(self.player.purchased, self.currentIndex)
+        for key,value in pairs(self.player.purchased) do
+            print(key.." "..value)
+        end
     else
         print("Transaction FAILED: insufficient funds!")
         self.failed = true

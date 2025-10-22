@@ -7,6 +7,7 @@ cam =cameraFile()
 
 require 'src/constant'
 require 'src/Player'
+require 'src/Car'
 
 require 'src/states/StateStack'
 require 'src/states/BaseState' 
@@ -14,7 +15,9 @@ require 'src/states/BaseState'
 require 'src/states/game/MainMenu'
 require 'src/states/game/PlayState'
 require 'src/states/game/Intro' 
-require 'src/states/game/QuestionSet'
+require 'src/states/game/QuestionSet' 
+require 'src/states/game/Dialogue'
+require 'src/states/game/Mobile'
 --require 'src/states/game/Credits'
 Timer = require 'knife.timer' 
 
