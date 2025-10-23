@@ -18,6 +18,7 @@ require 'src/states/game/Intro'
 require 'src/states/game/QuestionSet' 
 require 'src/states/game/Dialogue'
 require 'src/states/game/Mobile'
+require 'src/states/game/Movie'
 --require 'src/states/game/Credits'
 Timer = require 'knife.timer' 
 

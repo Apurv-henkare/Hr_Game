@@ -10,6 +10,13 @@ collision_obj = {{
     key = 13,
     choice = false
 }, {
+    x = 12100,
+    y = WINDOW_HEIGHT - 16 * 4 - 40,
+    width = 400,
+    height = 250,
+    key = 13,
+    choice = false
+}, {
     x = 736,
     y = WINDOW_HEIGHT - 16 * 6 - 50 - 70,
     width = 50,
@@ -27,43 +34,37 @@ collision_obj = {{
     width = 100,
     height = 50 + 50,
     key = 7
-},
-{
+}, {
     x = 8239 + 40,
     y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
     width = 100,
     height = 50 + 50,
     key = 9
-},
-{
+}, {
     x = 8864 + 40,
     y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
     width = 100,
     height = 50 + 50,
     key = 4
-},
-{
+}, {
     x = 9465 + 40,
     y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
     width = 100,
     height = 50 + 50,
     key = 6
-},
-{
+}, {
     x = 10089 + 40,
     y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
     width = 100,
     height = 50 + 50,
     key = 11
-},
-{
+}, {
     x = 10698 + 40,
     y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
     width = 100,
     height = 50 + 50,
     key = 10
-}
-}
+}}
 
 vegetables = {{
     x = 810 + 40,
@@ -92,6 +93,16 @@ ui = {
     borderRadius = 30
 }
 
+stars = {}
+for i = 1, 100 do
+    table.insert(stars, {
+        x = math.random(0, love.graphics.getWidth()),
+        y = math.random(0, love.graphics.getHeight()),
+        size = math.random(1, 3),
+        brightness = math.random() -- used for twinkle
+    })
+end
+
 function PlayState:enter()
     gStateStack:push(Dialogues(1))
 
@@ -104,12 +115,15 @@ function PlayState:init()
     self.lampImage = love.graphics.newImage('Image/lamp.png')
     self.fan = love.graphics.newImage("Image/fan.png")
     self.bg = love.graphics.newImage("Image/C2.png")
+    self.back = love.graphics.newImage("Image/back.png")
+    self.club = love.graphics.newImage("Image/club.png")
     self.scroll = 0
     self.SCROLL_SPEED = 50 -- pixels per second
     self.BG_LOOP_POINT = self.bg:getWidth()
     self.fanAngle = 0
-    self.choice = false 
+    self.choice = false
     self.cross1 = false
+    self.movie1 = false
 
     local startX = 3000
     local endX = 7300
@@ -117,6 +131,13 @@ function PlayState:init()
     local baseY = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60 - 100
 
     for x = startX, endX, gap do
+        table.insert(lamps, {
+            x = x,
+            y = baseY
+        })
+    end
+
+    for x = 12000, 18000, gap do
         table.insert(lamps, {
             x = x,
             y = baseY
@@ -133,19 +154,19 @@ function PlayState:update(dt)
     if (self.player.x <= 470) then
         cam:lookAt(470, WINDOW_HEIGHT / 2)
     elseif (self.player.x > 470 and self.player.x <= 1900) then
-        self.cross1= true
+        self.cross1 = true
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
-    elseif (self.player.x > 1900 )and self.cross1 == true then
+    elseif (self.player.x > 1900) and self.cross1 == true then
         self.player.maxX = 2500
         self.player.minX = 9000
-        self.player.x = 2500 
+        self.player.x = 2500
         self.cross1 = false
         cam:lookAt(2900, WINDOW_HEIGHT / 2)
     elseif (self.player.x >= 2900 and self.player.x < 7000) then
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
     elseif (self.player.x >= 7000) then
         self.player.maxX = 7000
-        self.player.minX = 13000
+        self.player.minX = 23000
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
     end
 
@@ -153,11 +174,27 @@ function PlayState:update(dt)
         gStateStack:push(QuestionSet(3, self.player))
     end
 
-
     for i, value in pairs(collision_obj) do
         if AABB(value, self.player) then
             value.x = -20000
             gStateStack:push(QuestionSet(value.key, self.player))
+        end
+    end
+
+    for key, value in ipairs(self.player.purchased) do
+        if value == 6 and self.movie1 == false then
+            self.movie1 = true
+            -- self.carTriggered = true
+            gStateStack:push(Movie())
+        end
+        if value == 1 then
+            self.player.myntra = true
+        end
+        if value == 4 then
+            self.player.dress = true
+        end
+        if value == 10 then
+            self.player.hair = true
         end
     end
 
@@ -173,24 +210,118 @@ function AABB(a, b)
     return a.x < b.x + b.width and b.x < a.x + a.width and a.y < b.y + b.height and b.y < a.y + a.height
 end
 
-function PlayState:render() 
-    if self.player.x <=9000 then 
+function PlayState:render()
+    if self.player.x <= 9000 then
         love.graphics.setColor(1, 1, 1, 0.7)
-    else 
-        love.graphics.setColor(1, 0.3, 0, 0.9)
+    elseif self.player.x > 9000 and self.player.x <= 19000 then
+        -- love.graphics.setColor(1, 0.3, 0, 0.9) 
+        love.graphics.setColor(1, 0.6, 0.3, 0.5)
+        -- love.graphics.setColor(0.0, 0.0, 0.2, 0.4) 
+    else
+        love.graphics.setColor(0.0, 0.0, 0.2, 0.4)
     end
     love.graphics.draw(self.bgImage, 0, 0, 0, 3, 2)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.bg, -self.scroll, 0)
-    love.graphics.draw(self.bg, -self.scroll + self.bg:getWidth(), 0)
+    if self.player.x <= 9000 then
+        love.graphics.draw(self.back, 0 - self.player.bgx, WINDOW_HEIGHT - 400, 0, 2, 2)
+        -- 🌤 Afternoon Sun
+        local sunX, sunY = 700, 120 -- higher position for afternoon
+        local sunRadius = 60
+
+        -- glow layers (soft yellow-white halo)
+        for i = 1, 8 do
+            love.graphics.setColor(1, 0.9, 0.4, 0.07) -- light yellow glow
+            love.graphics.circle("fill", sunX, sunY, sunRadius + i * 6)
+        end
+
+        -- main bright sun
+        love.graphics.setColor(1, 1, 0.6, 1)
+        love.graphics.circle("fill", sunX, sunY, sunRadius)
+
+        love.graphics.setColor(1, 1, 1) -- reset
+        love.graphics.draw(self.bg, -self.scroll, 0)
+        love.graphics.draw(self.bg, -self.scroll + self.bg:getWidth(), 0)
+    elseif self.player.x > 9000 and self.player.x <= 19000 then
+        -- 🌇 Sunset Sun
+        local sunX, sunY = 600, 150 -- position in sky
+        local sunRadius = 50
+
+        -- glow layers (soft orange halo)
+        for i = 1, 10 do
+            love.graphics.setColor(1, 0.6, 0.2, 0.05) -- orange glow
+            love.graphics.circle("fill", sunX, sunY, sunRadius + i * 5)
+        end
+
+        -- main sun
+        love.graphics.setColor(1, 0.8, 0.3, 1)
+        love.graphics.circle("fill", sunX, sunY, sunRadius)
+
+        love.graphics.setColor(1, 1, 1) -- reset color
+
+    elseif self.player.x > 19000 then
+
+        -- ✨ Draw stars
+        for _, star in ipairs(stars) do
+            local alpha = 0.5 + 0.5 * math.sin(love.timer.getTime() * 2 + star.brightness * 10)
+            love.graphics.setColor(1, 1, 1, alpha)
+            love.graphics.circle("fill", star.x, star.y, star.size)
+        end
+
+        local moonX, moonY = 700, 100 -- position
+        local moonRadius = 40
+
+        -- glow layer (soft light)
+        for i = 1, 10 do
+            love.graphics.setColor(1, 1, 0.8, 0.05) -- pale yellow glow
+            love.graphics.circle("fill", moonX, moonY, moonRadius + i * 3)
+        end
+
+        -- solid moon
+        love.graphics.setColor(1, 1, 0.9, 1)
+        love.graphics.circle("fill", moonX, moonY, moonRadius)
+    end
+
+    -- love.graphics.setColor(1, 1, 1, 1)
+    -- love.graphics.draw(self.bg, -self.scroll, 0)
+    -- love.graphics.draw(self.bg, -self.scroll + self.bg:getWidth(), 0)
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.rectangle('fill', 0, WINDOW_HEIGHT - 16 * 6, 10000, 16 * 6 - 10)
+    -- love.graphics.rectangle('fill', 0, WINDOW_HEIGHT - 16 * 6, 10000, 16 * 6 - 10) 
+
+    local roadY = WINDOW_HEIGHT - 16 * 6
+    local roadHeight = 16 * 6 - 10+20
+
+    -- Base road
+    love.graphics.setColor(0.2, 0.2, 0.2) -- asphalt gray
+    love.graphics.rectangle('fill', 0, roadY, 10000, roadHeight)
+
+    -- Road top and bottom edges
+    love.graphics.setColor(0.3, 0.3, 0.3)
+    love.graphics.rectangle('fill', 0, roadY, 10000, 4) -- top border
+    love.graphics.rectangle('fill', 0, roadY + roadHeight - 4, 10000, 4) -- bottom border
+
+    -- -- Center dashed line
+    -- love.graphics.setColor(1, 1, 0.6)
+    -- for i = 0, 10000, 80 do
+    --     love.graphics.rectangle('fill', i, roadY + roadHeight / 2 - 2, 40, 4)
+    -- end
+
+    -- Road texture (optional small dots)
+    love.graphics.setColor(0.25, 0.25, 0.25, 0.5)
+    for i = 1, 200 do
+        local x = math.random(0, 10000)
+        local y = math.random(roadY, roadY + roadHeight)
+        love.graphics.circle('fill', x, y, 1)
+    end
+
+    love.graphics.setColor(1, 1, 1)
+
     -- love.graphics.draw(self.homeImage, 0, WINDOW_HEIGHT - 600,0,1)
     cam:attach()
     -- love.graphics.print("Background or map here", 100, 100)  
     -- background scroll-- 
-
+    -- love.graphics.draw(self.back,2000,WINDOW_HEIGHT-400,0,10,3)
+    -- love.graphics.rectangle('fill', 2000, WINDOW_HEIGHT - 16 * 6, 10000, 16 * 6 - 10)
     love.graphics.draw(self.homeImage, -50, WINDOW_HEIGHT - 600, 0, 1)
     love.graphics.draw(self.mallImage, 8000, WINDOW_HEIGHT - 600, 0, 1, 1)
     love.graphics.draw(self.fan, 100, WINDOW_HEIGHT - 400, self.fanAngle, 1.2, 1.2, self.fan:getWidth() / 2,

@@ -150,10 +150,13 @@ function QuestionSet:performTransaction()
         self.player.money = self.player.money - price
         print("Transaction CONFIRMED! Remaining money: " .. self.player.money)
         self.transactionComplete = true 
-
         table.insert(self.player.purchased, self.currentIndex)
         for key,value in pairs(self.player.purchased) do
-            print(key.." "..value)
+            print(key.." "..value)    
+            if self.currentIndex == 13 and value == 13 then 
+                self.player.carTriggered = true 
+                self.player.carReached = false
+            end
         end
     else
         print("Transaction FAILED: insufficient funds!")
