@@ -62,7 +62,6 @@ function PlayState:enter()
 end
 function PlayState:init()
     self.player = Player()
-    self.friend = Player()
     self.homeImage = love.graphics.newImage('Image/Home_3.png')
     self.bgImage = love.graphics.newImage('Image/Bg.jpg')
     self.mallImage = love.graphics.newImage('Image/Mall (3).png')
@@ -73,7 +72,8 @@ function PlayState:init()
     self.SCROLL_SPEED = 50 -- pixels per second
     self.BG_LOOP_POINT = self.bg:getWidth()
     self.fanAngle = 0
-    self.choice = false
+    self.choice = false 
+    self.cross1 = false
 
     local startX = 3000
     local endX = 7300
@@ -86,7 +86,6 @@ function PlayState:init()
             y = baseY
         })
     end
-
 end
 
 function PlayState:update(dt)
@@ -98,11 +97,13 @@ function PlayState:update(dt)
     if (self.player.x <= 470) then
         cam:lookAt(470, WINDOW_HEIGHT / 2)
     elseif (self.player.x > 470 and self.player.x <= 1900) then
+        self.cross1= true
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
-    elseif (self.player.x > 1900 and love.keyboard.wasPressed('return')) then
+    elseif (self.player.x > 1900 )and self.cross1 == true then
         self.player.maxX = 2500
         self.player.minX = 9000
-        self.player.x = 2500
+        self.player.x = 2500 
+        self.cross1 = false
         cam:lookAt(2900, WINDOW_HEIGHT / 2)
     elseif (self.player.x >= 2900 and self.player.x < 7000) then
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
@@ -116,9 +117,6 @@ function PlayState:update(dt)
         gStateStack:push(QuestionSet(3, self.player))
     end
 
-    -- if self.player.maxX == 2500 and AABB(self.player,self.player.carObj) then 
-    --     gStateStack:push(QuestionSet(13,self.player))
-    -- end  
 
     for i, value in pairs(collision_obj) do
         if AABB(value, self.player) then
@@ -139,8 +137,12 @@ function AABB(a, b)
     return a.x < b.x + b.width and b.x < a.x + a.width and a.y < b.y + b.height and b.y < a.y + a.height
 end
 
-function PlayState:render()
-    love.graphics.setColor(1, 1, 1, 0.7)
+function PlayState:render() 
+    if self.player.x <=9000 then 
+        love.graphics.setColor(1, 1, 1, 0.7)
+    else 
+        love.graphics.setColor(1, 0.3, 0, 0.9)
+    end
     love.graphics.draw(self.bgImage, 0, 0, 0, 3, 2)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setColor(1, 1, 1)

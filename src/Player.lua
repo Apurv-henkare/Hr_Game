@@ -131,7 +131,7 @@ function Player:render()
     0 -- origin y
     ) 
     
-    love.graphics.setColor(1,0.5,0.1) 
+    love.graphics.setColor(1,0.8,0.2) 
 
     if self.x <=7700 then 
         self.currentAnimation:draw(self.spriteSheet, 8000, self.y, 0, -- rotation
