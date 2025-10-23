@@ -27,7 +27,43 @@ collision_obj = {{
     width = 100,
     height = 50 + 50,
     key = 7
-}}
+},
+{
+    x = 8239 + 40,
+    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
+    width = 100,
+    height = 50 + 50,
+    key = 9
+},
+{
+    x = 8864 + 40,
+    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
+    width = 100,
+    height = 50 + 50,
+    key = 4
+},
+{
+    x = 9465 + 40,
+    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
+    width = 100,
+    height = 50 + 50,
+    key = 6
+},
+{
+    x = 10089 + 40,
+    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
+    width = 100,
+    height = 50 + 50,
+    key = 11
+},
+{
+    x = 10698 + 40,
+    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
+    width = 100,
+    height = 50 + 50,
+    key = 10
+}
+}
 
 vegetables = {{
     x = 810 + 40,
