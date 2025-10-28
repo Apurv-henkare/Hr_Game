@@ -117,6 +117,10 @@ function PlayState:init()
     self.bg = love.graphics.newImage("Image/C2.png")
     self.back = love.graphics.newImage("Image/back.png")
     self.club = love.graphics.newImage("Image/club.png")
+    self.city = love.graphics.newImage('Image/city.png')
+    --self.night = love.graphics.newImage('Image/pahad.png')
+    self.jungle = love.graphics.newImage('Image/jungle.png')
+
     self.scroll = 0
     self.SCROLL_SPEED = 50 -- pixels per second
     self.BG_LOOP_POINT = self.bg:getWidth()
@@ -124,6 +128,7 @@ function PlayState:init()
     self.choice = false
     self.cross1 = false
     self.movie1 = false
+    self.bot = false
 
     local startX = 3000
     local endX = 7300
@@ -196,6 +201,9 @@ function PlayState:update(dt)
         if value == 10 then
             self.player.hair = true
         end
+        if value == 7 then
+            self.player.gadget = true
+        end
     end
 
     for key, value in ipairs(vegetables) do
@@ -203,6 +211,11 @@ function PlayState:update(dt)
             value.x = -20000
             -- gStateStack:push(QuestionSet(value.key,self.player))
         end
+    end 
+
+    if love.keyboard.wasPressed('l') or self.player.x >=20000 then 
+        gStateStack:pop()
+        gStateStack:push(End(self.player.purchased,self.player.money))
     end
 end
 
@@ -215,7 +228,7 @@ function PlayState:render()
         love.graphics.setColor(1, 1, 1, 0.7)
     elseif self.player.x > 9000 and self.player.x <= 19000 then
         -- love.graphics.setColor(1, 0.3, 0, 0.9) 
-        love.graphics.setColor(1, 0.6, 0.3, 0.5)
+        love.graphics.setColor(1, 0.4, 0.4, 0.9)
         -- love.graphics.setColor(0.0, 0.0, 0.2, 0.4) 
     else
         love.graphics.setColor(0.0, 0.0, 0.2, 0.4)
@@ -225,39 +238,61 @@ function PlayState:render()
     love.graphics.setColor(1, 1, 1)
     if self.player.x <= 9000 then
         love.graphics.draw(self.back, 0 - self.player.bgx, WINDOW_HEIGHT - 400, 0, 2, 2)
-        -- 🌤 Afternoon Sun
-        local sunX, sunY = 700, 120 -- higher position for afternoon
+
+        -- 🌤 Afternoon Burning Sun
+        local sunX, sunY = 700, 120
         local sunRadius = 60
 
-        -- glow layers (soft yellow-white halo)
+        -- 🔥 Heat shimmer timing
+        local t = love.timer.getTime()
+
+        -- 🔆 Glowing shimmer layers (slow moving heat)
         for i = 1, 8 do
-            love.graphics.setColor(1, 0.9, 0.4, 0.07) -- light yellow glow
-            love.graphics.circle("fill", sunX, sunY, sunRadius + i * 6)
+            -- subtle alpha flicker (soft breathing light)
+            local alpha = 0.05 + math.sin(t * (0.8 + i * 0.2)) * 0.02
+
+            -- very small offset to simulate rising heat shimmer
+            local shimmer = math.sin(t * (0.5 + i * 0.1) + i) * 1.5
+
+            love.graphics.setColor(1, 0.9, 0.4, alpha)
+            love.graphics.circle("fill", sunX, sunY + shimmer, sunRadius + i * 5)
         end
 
-        -- main bright sun
+        -- ☀️ Main bright sun (steady core, no pulse)
         love.graphics.setColor(1, 1, 0.6, 1)
         love.graphics.circle("fill", sunX, sunY, sunRadius)
 
-        love.graphics.setColor(1, 1, 1) -- reset
+        -- reset
+        love.graphics.setColor(1, 1, 1)
         love.graphics.draw(self.bg, -self.scroll, 0)
         love.graphics.draw(self.bg, -self.scroll + self.bg:getWidth(), 0)
     elseif self.player.x > 9000 and self.player.x <= 19000 then
         -- 🌇 Sunset Sun
+        -- 🌆 Evening Burning Sun
         local sunX, sunY = 600, 150 -- position in sky
         local sunRadius = 50
+        local t = love.timer.getTime()
 
-        -- glow layers (soft orange halo)
+        -- 🔥 Soft glowing shimmer (slow, stable)
         for i = 1, 10 do
-            love.graphics.setColor(1, 0.6, 0.2, 0.05) -- orange glow
-            love.graphics.circle("fill", sunX, sunY, sunRadius + i * 5)
+            -- subtle transparency flicker for warm sunlight
+            local alpha = 0.05 + math.sin(t * (0.7 + i * 0.15)) * 0.015
+
+            -- slow vertical shimmer (rising heat distortion)
+            local shimmer = math.sin(t * (0.4 + i * 0.1) + i) * 1.2
+
+            love.graphics.setColor(1, 0.6, 0.1, alpha)
+            love.graphics.circle("fill", sunX, sunY + 50 + shimmer, sunRadius + i * 5)
         end
 
-        -- main sun
-        love.graphics.setColor(1, 0.8, 0.3, 1)
-        love.graphics.circle("fill", sunX, sunY, sunRadius)
+        -- ☀️ Main sunset sun core (no radius change)
+        love.graphics.setColor(1, 0.6, 0.3, 1)
+        love.graphics.circle("fill", sunX, sunY + 50, sunRadius)
 
-        love.graphics.setColor(1, 1, 1) -- reset color
+
+        -- reset color and draw city
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(self.city, 0, 100)
 
     elseif self.player.x > 19000 then
 
@@ -280,6 +315,7 @@ function PlayState:render()
         -- solid moon
         love.graphics.setColor(1, 1, 0.9, 1)
         love.graphics.circle("fill", moonX, moonY, moonRadius)
+        love.graphics.draw(self.jungle, 0 - self.player.bgx, 100)
     end
 
     -- love.graphics.setColor(1, 1, 1, 1)
@@ -289,7 +325,7 @@ function PlayState:render()
     -- love.graphics.rectangle('fill', 0, WINDOW_HEIGHT - 16 * 6, 10000, 16 * 6 - 10) 
 
     local roadY = WINDOW_HEIGHT - 16 * 6
-    local roadHeight = 16 * 6 - 10+20
+    local roadHeight = 16 * 6 - 10 + 20
 
     -- Base road
     love.graphics.setColor(0.2, 0.2, 0.2) -- asphalt gray
@@ -342,7 +378,7 @@ function PlayState:render()
     love.graphics.print("heloo", 3400, 200)
     cam:detach()
 
-    love.graphics.print(self.player.x, 200, 200)
+    -- love.graphics.print(self.player.x, 200, 200)
 
     -- love.graphics.print("Use arrow keys to move, 1–15 to change style", 10, 10)
 

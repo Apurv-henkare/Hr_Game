@@ -28,10 +28,19 @@ function Player:init(x, y)
 
     self.myntra = false
     self.dress = false
-    self.hair = false 
+    self.hair = false
+    self.gadget = false
+    self.botAngle = 0
 
     self.bgx = 0
     self.spriteSheet = love.graphics.newImage('Image/girl2.png')
+    self.bot = love.graphics.newImage('Image/bot.png')
+
+    self.isJumping = false
+    self.jumpSpeed = -600 -- upward velocity
+    self.gravity = 1500 -- how strong gravity pulls down
+    self.dy = 0 -- vertical velocity
+    self.groundY = self.y
 
     -- your frame size
     local grid = anim8.newGrid(frameW, frameH, self.spriteSheet:getWidth(), self.spriteSheet:getHeight())
@@ -44,7 +53,8 @@ function Player:init(x, y)
         self.styles[row] = {
             idle = anim8.newAnimation(grid('1-1', row), 0.05),
             -- walkLeft = anim8.newAnimation(grid('4-6', row), 0.1),
-            walkRight = anim8.newAnimation(grid('1-6', row), 0.1)
+            walkRight = anim8.newAnimation(grid('1-6', row), 0.1),
+            jump = anim8.newAnimation(grid('1-1', row), 0.1)
         }
     end
 
@@ -52,29 +62,69 @@ function Player:init(x, y)
     self.currentAnimation = self.styles[self.currentStyle].idle
 end
 local test = 1
-
+local moving = false
 function Player:update(dt)
-    local moving = false
+    -- moving = false
     self.carObj:update(dt)
 
+    -- Start jump
+
+    self.botAngle = self.botAngle + 10 * dt
+
+    -- Movement and jumping
+    if love.keyboard.wasPressed and love.keyboard.wasPressed('space') and not self.isJumping then
+        -- Jump start
+        self.isJumping = true
+        self.dy = self.jumpSpeed
+        self.state = 'jump'
+    end
+
+    -- Horizontal movement (always allowed)
     if love.keyboard.isDown('right') then
         self.x = math.min(self.minX, self.x + self.speed * dt)
         self.direction = 1
-        self.state = 'walkRight'
+        if not self.isJumping then
+            self.state = 'walkRight'
+        end
         moving = true
+
     elseif love.keyboard.isDown('left') then
         self.x = math.max(self.maxX, self.x - self.speed * dt)
         self.direction = -1
-        self.state = 'walkLeft'
+        if not self.isJumping then
+            self.state = 'walkLeft'
+        end
         moving = true
+
     else
-        self.state = 'idle'
+        if not self.isJumping then
+            self.state = 'idle'
+        end
+        moving = false
+    end
+
+    -- Apply gravity if jumping
+    if self.isJumping then
+        self.dy = self.dy + self.gravity * dt
+        self.y = self.y + self.dy * dt
+
+        -- Land on ground
+        if self.y >= self.groundY then
+            self.y = self.groundY
+            self.isJumping = false
+            self.dy = 0
+            self.state = moving and (self.direction == 1 and 'walkRight' or 'walkLeft') or 'idle'
+        else
+            self.state = 'jump' -- always keep jump anim while in air
+        end
     end
 
     -- Set animation based on state
     if self.state == 'idle' then
         self.currentAnimation = self.styles[self.currentStyle].idle
-    else 
+    elseif self.state == 'jump' then
+        self.currentAnimation = self.styles[self.currentStyle].jump
+    else
         print(self.currentStyle)
         self.currentAnimation = self.styles[self.currentStyle].walkRight
     end
@@ -82,15 +132,15 @@ function Player:update(dt)
     -- self.currentAnimation = self.styles[self.currentStyle][self.state]
     -- self.currentAnimation:update(dt) 
     -- if moving then
-    self.currentAnimation:update(dt) 
+    self.currentAnimation:update(dt)
 
-    if ((self.x >=2200 and self.x <=7000) and moving == true )then
-        if self.state == 'walkRight' then 
-            self.bgx = self.bgx +10*dt
+    if ((self.x >= 2200 and self.x <= 7000) and moving == true) then
+        if self.state == 'walkRight' then
+            self.bgx = self.bgx + 10 * dt
         elseif self.state == 'walkLeft' then
-            self.bgx = self.bgx -10*dt
+            self.bgx = self.bgx - 10 * dt
         end
-    end 
+    end
     -- else
     -- self.currentAnimation:gotoFrame(1) -- idle frame (middle one)
     -- end
@@ -126,8 +176,8 @@ function Player:update(dt)
     else
         -- Move player with car
         self.x = self.carObj.x + 50 -- keep player slightly ahead on car
-        self.y = self.carObj.y - 100 
-        self.bgx = self.bgx +10*dt
+        self.y = self.carObj.y - 100
+        self.bgx = self.bgx + 10 * dt
 
         -- 🚗 Detach when car stops at destination
         if not self.carObj.active then
@@ -146,38 +196,38 @@ function Player:update(dt)
     end
 
     if self.myntra and self.dress and self.hair then
-      --  print("🟢 All three are true") 
+        --  print("🟢 All three are true") 
         self:setStyle(6)
 
     elseif self.myntra and self.dress and not self.hair then
-       -- print("Case: myntra + dress true, hair false") 
-         self:setStyle(5)
+        -- print("Case: myntra + dress true, hair false") 
+        self:setStyle(5)
 
     elseif self.myntra and not self.dress and self.hair then
-       -- print("Case: myntra + hair true, dress false") 
+        -- print("Case: myntra + hair true, dress false") 
         self:setStyle(4)
 
     elseif not self.myntra and self.dress and self.hair then
-        --print("Case: dress + hair true, myntra false")
+        -- print("Case: dress + hair true, myntra false")
         self:setStyle(6)
 
     elseif self.myntra and not self.dress and not self.hair then
-       -- print("Case: only myntra true")
+        -- print("Case: only myntra true")
         self:setStyle(2)
 
     elseif not self.myntra and self.dress and not self.hair then
-       -- print("Case: only dress true") 
+        -- print("Case: only dress true") 
         self:setStyle(5)
 
     elseif not self.myntra and not self.dress and self.hair then
-       -- print("Case: only hair true")
+        -- print("Case: only hair true")
         self:setStyle(3)
     else
-       -- print("🔴 All are false") 
+        -- print("🔴 All are false") 
         self:setStyle(1)
-    end 
+    end
 
-   -- self:setStyle(6)
+    -- self:setStyle(6)
 
 end
 
@@ -213,7 +263,12 @@ function Player:render()
     end
 
     love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
+    -- love.graphics.rectangle('line', self.x, self.y, self.width, self.height) 
+    if self.gadget == true and moving == true then
+        love.graphics.draw(self.bot, self.x, self.y - 5, self.botAngle, 0.65, 0.65, (100) / 2, (120) / 2)
+    elseif self.gadget == true and moving == false then
+        love.graphics.draw(self.bot, self.x, self.y - 5, 0, 0.65, 0.65, (100) / 2, (120) / 2)
+    end
     self.carObj:render()
 end
 

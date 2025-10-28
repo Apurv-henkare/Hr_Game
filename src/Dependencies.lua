@@ -18,12 +18,15 @@ require 'src/states/game/Intro'
 require 'src/states/game/QuestionSet' 
 require 'src/states/game/Dialogue'
 require 'src/states/game/Mobile'
-require 'src/states/game/Movie'
+require 'src/states/game/Movie' 
+require 'src/states/game/End'
 --require 'src/states/game/Credits'
 Timer = require 'knife.timer' 
 
 http = require("socket.http")
 ltn12 = require("ltn12")
 json = require("json") -- your json.lua 
-  -- Timeout after 2 seconds
+  -- Timeout after 2 seconds 
+
+require("js")
 
