@@ -8,6 +8,7 @@ cam =cameraFile()
 require 'src/constant'
 require 'src/Player'
 require 'src/Car'
+require 'src/Girl'
 
 require 'src/states/StateStack'
 require 'src/states/BaseState' 

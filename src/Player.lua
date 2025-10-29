@@ -5,7 +5,7 @@ Player = Class {
 function Player:init(x, y)
     frameW, frameH = 256, 256
     self.carObj = Car()
-    self.x = 200
+    self.x = 19000
     self.y = WINDOW_HEIGHT - 16 * 6 - 50 - 70
     self.width = 256 * 0.7
     self.height = 256
@@ -263,7 +263,7 @@ function Player:render()
         0 -- origin y
         )
     else
-        self.currentAnimation:draw(self.spriteSheet, self.x + 300, self.y, 0, -- rotation
+        self.currentAnimation:draw(self.spriteSheet, math.min(19000,self.x+250), self.y, 0, -- rotation
         0.7 * self.direction, -- flip if moving left
         0.7, -- y scale
         256 / 2 - 1 * self.direction, -- origin x for flip

@@ -13,6 +13,7 @@ collision_obj = {
     { x = 8239 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 9 },
     { x = 10698 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 10 },
     { x = 10089 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 11 },
+    { x = 19500, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 12 },
     { x = 3400, y = WINDOW_HEIGHT - 16 * 4 - 40, width = 400, height = 250, key = 13, choice = false },
     { x = 12100, y = WINDOW_HEIGHT - 16 * 4 - 40, width = 400, height = 250, key = 13, choice = false },
     { x = 736, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70, width = 50, height = 70, key = 14 }
@@ -88,6 +89,7 @@ function PlayState:enter()
 
 end
 function PlayState:init()
+    self.girl = Girl()
     self.player = Player()
     self.homeImage = love.graphics.newImage('Image/Home_3.png')
     self.bgImage = love.graphics.newImage('Image/Bg.jpg')
@@ -184,6 +186,7 @@ end
 function PlayState:update(dt)
     time = time + dt
     self.player:update(dt) 
+    self.girl:update(dt)
     for _, fan in ipairs(fans) do
         fan.rotation = fan.rotation + fan.speed * dt
     end
@@ -205,7 +208,7 @@ function PlayState:update(dt)
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
     elseif (self.player.x >= 7000) then
         self.player.maxX = 7000
-        self.player.minX = 23000
+        self.player.minX = 30000
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
     end
 
@@ -221,11 +224,6 @@ function PlayState:update(dt)
     end
 
     for key, value in ipairs(self.player.purchased) do
-        if value == 6 and self.movie1 == false then
-            self.movie1 = true
-            -- self.carTriggered = true
-            gStateStack:push(Movie())
-        end
         if value == 1 then
             self.player.myntra = true
         end
@@ -237,11 +235,19 @@ function PlayState:update(dt)
             -- self.carTriggered = true
             gStateStack:push(Concert())
         end
-        if value == 10 then
-            self.player.hair = true
+        if value == 6 and self.movie1 == false then
+            self.movie1 = true
+            -- self.carTriggered = true
+            gStateStack:push(Movie())
         end
         if value == 7 then
             self.player.gadget = true
+        end
+        if value == 10 then
+            self.player.hair = true
+        end
+        if value == 12 then
+            self.girl.happy = true
         end
     end
 
@@ -252,7 +258,7 @@ function PlayState:update(dt)
         end
     end
 
-    if love.keyboard.wasPressed('l') or self.player.x >= 23000 then
+    if love.keyboard.wasPressed('l') or self.player.x >= 30000 then
         gStateStack:pop()
         gStateStack:push(End(self.player.purchased, self.player.money))
     end
@@ -431,7 +437,7 @@ function PlayState:render()
     love.graphics.draw(self.mallImage, 8000, WINDOW_HEIGHT - 600, 0, 1, 1)
     love.graphics.draw(self.mall_back, 8000+3000, WINDOW_HEIGHT - 600-5, 0, 1, 1.03)
     love.graphics.draw(self.night_mall, 16500, WINDOW_HEIGHT - 600-5, 0, 1, 1.03)
-    love.graphics.draw(self.homeImage, 20000 + self.homeImage:getWidth(), WINDOW_HEIGHT - 600, 0, -1,1.03)
+    love.graphics.draw(self.homeImage, 24000 + self.homeImage:getWidth(), WINDOW_HEIGHT - 600, 0, -1,1.03)
     --love.graphics.draw(self.fan, 100, WINDOW_HEIGHT - 400, self.fanAngle, 1.2, 1.2, self.fan:getWidth() / 2,
      --   self.fan:getHeight() / 2)
 
@@ -479,6 +485,7 @@ function PlayState:render()
     end
     love.graphics.setColor(1,1,1)
     self.player:render() 
+    self.girl:render()
     love.graphics.setColor(1,1,1)
     for i, value in pairs(lamps) do
         love.graphics.draw(self.lampImage, value.x, value.y, 0, 1, 1)
