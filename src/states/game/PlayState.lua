@@ -2,70 +2,21 @@ PlayState = Class {
     __includes = BaseState
 }
 time = 0
-collision_obj = {{
-    x = 3400,
-    y = WINDOW_HEIGHT - 16 * 4 - 40,
-    width = 400,
-    height = 250,
-    key = 13,
-    choice = false
-}, {
-    x = 12100,
-    y = WINDOW_HEIGHT - 16 * 4 - 40,
-    width = 400,
-    height = 250,
-    key = 13,
-    choice = false
-}, {
-    x = 736,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70,
-    width = 50,
-    height = 70,
-    key = 14
-}, {
-    x = 1751 + 40,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
-    width = 100,
-    height = 50 + 50,
-    key = 1
-}, {
-    x = 1751 + 60 + 110,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
-    width = 100,
-    height = 50 + 50,
-    key = 7
-}, {
-    x = 8239 + 40,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
-    width = 100,
-    height = 50 + 50,
-    key = 9
-}, {
-    x = 8864 + 40,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
-    width = 100,
-    height = 50 + 50,
-    key = 4
-}, {
-    x = 9465 + 40,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
-    width = 100,
-    height = 50 + 50,
-    key = 6
-}, {
-    x = 10089 + 40,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
-    width = 100,
-    height = 50 + 50,
-    key = 11
-}, {
-    x = 10698 + 40,
-    y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60,
-    width = 100,
-    height = 50 + 50,
-    key = 10
-}} 
-
+collision_obj = {
+    { x = 1751 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 1 },
+    {x = 16920 , y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 3},
+    { x = 8864 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 4 },
+    { x = 17970, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 5 },
+    { x = 9465 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 6 },
+    { x = 1751 + 60 + 110, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 7 },
+    { x = 17440, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 8 },
+    { x = 8239 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 9 },
+    { x = 10698 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 10 },
+    { x = 10089 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 11 },
+    { x = 3400, y = WINDOW_HEIGHT - 16 * 4 - 40, width = 400, height = 250, key = 13, choice = false },
+    { x = 12100, y = WINDOW_HEIGHT - 16 * 4 - 40, width = 400, height = 250, key = 13, choice = false },
+    { x = 736, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70, width = 50, height = 70, key = 14 }
+}
 signs = {
         { x = 4050, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
         { x = 5500, y = 200, text = "2 Km left\nKeep moving, step by step!" },
@@ -151,6 +102,7 @@ function PlayState:init()
     self.jungle = love.graphics.newImage('Image/jungle.png')
     self.mall_front = love.graphics.newImage('Image/Mall_front.png')
     self.mall_back = love.graphics.newImage('Image/Mall_back.png')
+    self.night_mall = love.graphics.newImage('Image/Night_mall.png')
     self.scroll = 0
     self.SCROLL_SPEED = 50 -- pixels per second
     self.BG_LOOP_POINT = self.bg:getWidth()
@@ -158,6 +110,7 @@ function PlayState:init()
     self.choice = false
     self.cross1 = false
     self.movie1 = false
+    self.concert = false
     self.bot = false
     self.sunset = 0
     local startX = 3000
@@ -279,6 +232,11 @@ function PlayState:update(dt)
         if value == 4 then
             self.player.dress = true
         end
+        if value == 5 and self.concert == false then
+            self.concert = true
+            -- self.carTriggered = true
+            gStateStack:push(Concert())
+        end
         if value == 10 then
             self.player.hair = true
         end
@@ -294,7 +252,7 @@ function PlayState:update(dt)
         end
     end
 
-    if love.keyboard.wasPressed('l') or self.player.x >= 20000 then
+    if love.keyboard.wasPressed('l') or self.player.x >= 23000 then
         gStateStack:pop()
         gStateStack:push(End(self.player.purchased, self.player.money))
     end
@@ -335,7 +293,7 @@ end
 function PlayState:render()
     if self.player.x <= 9000 then
         love.graphics.setColor(1, 1, 1, 0.7)
-    elseif self.player.x > 9000 and self.player.x <= 19000 then
+    elseif self.player.x > 9000 and self.player.x <= 17500 then
         -- love.graphics.setColor(1, 0.3, 0, 0.9) 
         love.graphics.setColor(1, 0.4, 0.4, 0.9)
         -- love.graphics.setColor(0.0, 0.0, 0.2, 0.4) 
@@ -375,7 +333,7 @@ function PlayState:render()
         love.graphics.setColor(1, 1, 1)
         love.graphics.draw(self.bg, -self.scroll, 0)
         love.graphics.draw(self.bg, -self.scroll + self.bg:getWidth(), 0)
-    elseif self.player.x > 9000 and self.player.x <= 19000 then
+    elseif self.player.x > 9000 and self.player.x <= 17500 then
         -- 🌇 Sunset Sun
         -- 🌆 Evening Burning Sun
         local sunX, sunY = 600, 150 -- position in sky
@@ -402,7 +360,7 @@ function PlayState:render()
         love.graphics.setColor(1, 1, 1)
         love.graphics.draw(self.city, 0 - self.player.city_x, 100)
 
-    elseif self.player.x > 19000 then
+    elseif self.player.x > 17500 then
 
         -- ✨ Draw stars
         for _, star in ipairs(stars) do
@@ -472,6 +430,8 @@ function PlayState:render()
     love.graphics.draw(self.mall_front, 8000-277, WINDOW_HEIGHT - 600-5, 0, 1, 1.03)
     love.graphics.draw(self.mallImage, 8000, WINDOW_HEIGHT - 600, 0, 1, 1)
     love.graphics.draw(self.mall_back, 8000+3000, WINDOW_HEIGHT - 600-5, 0, 1, 1.03)
+    love.graphics.draw(self.night_mall, 16500, WINDOW_HEIGHT - 600-5, 0, 1, 1.03)
+    love.graphics.draw(self.homeImage, 20000 + self.homeImage:getWidth(), WINDOW_HEIGHT - 600, 0, -1,1.03)
     --love.graphics.draw(self.fan, 100, WINDOW_HEIGHT - 400, self.fanAngle, 1.2, 1.2, self.fan:getWidth() / 2,
      --   self.fan:getHeight() / 2)
 
