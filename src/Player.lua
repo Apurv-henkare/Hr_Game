@@ -40,7 +40,8 @@ function Player:init(x, y)
     self.jumpSpeed = -600 -- upward velocity
     self.gravity = 1500 -- how strong gravity pulls down
     self.dy = 0 -- vertical velocity
-    self.groundY = self.y
+    self.groundY = self.y 
+    self.city_x = 0
 
     -- your frame size
     local grid = anim8.newGrid(frameW, frameH, self.spriteSheet:getWidth(), self.spriteSheet:getHeight())
@@ -140,6 +141,14 @@ function Player:update(dt)
         elseif self.state == 'walkLeft' then
             self.bgx = self.bgx - 10 * dt
         end
+    end 
+
+    if ((self.x > 12000 and self.x <= 16000) and moving == true) then
+        if self.state == 'walkRight' then
+            self.city_x = self.city_x + 5 * dt
+        elseif self.state == 'walkLeft' then
+            self.city_x = self.city_x - 5 * dt
+        end
     end
     -- else
     -- self.currentAnimation:gotoFrame(1) -- idle frame (middle one)
@@ -192,7 +201,7 @@ function Player:update(dt)
     if self.carPos == 1 and self.x >= 8000 then
         self.carObj.x = 12000
         self.carPos = 2
-        self.carObj.maxX = 18000
+        self.carObj.maxX = 16000
     end
 
     if self.myntra and self.dress and self.hair then
