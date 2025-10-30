@@ -66,13 +66,14 @@ function MainMenu:render()
     local glow = 0.7 + 0.3 * math.sin(t * 2) -- pulsing alpha
     love.graphics.setFont(self.titleFont)
     love.graphics.setColor(1, 0.9, 0.7, glow) -- soft warm color
-    love.graphics.printf("Spend Smart : Make Every Rupee Count", 0, screenH / 2 - 60, screenW, "center")
+    love.graphics.printf("Buy Or Bye", 0, screenH / 2 - 60-70, screenW, "center")
+    love.graphics.printf("Make Every Rupee Count", 0, screenH / 2 - 60+70-70, screenW, "center")
 
     -- 4️⃣ Blinking "Press ENTER to Start"
     if self.showText then
         love.graphics.setFont(self.textFont)
         love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.printf("Press ENTER to Start", 0, screenH / 2 + 40, screenW, "center")
+        love.graphics.printf("Press ENTER to Start", 0, screenH / 2 + 40+70-70, screenW, "center")
     end
 
     love.graphics.setColor(1, 1, 1)

@@ -7,7 +7,7 @@ Dialogues = Class {
 function Dialogues:init(index, player)
     self.player = player
     self.dialogues = {{
-        text = "Hey there, traveler! Hows your journey been so far?"
+        text = "Welcome! \n\nUse Left/Right to move, Space to jump. \nKeep going right to begin your adventure!"
     }, {
         text = "It is morning do you want to make breakfast or order Swiggy?"
     }, {
@@ -67,10 +67,10 @@ function Dialogues:render()
     love.graphics.rectangle("fill", 30, 30 + 35, 840, 200, 12)
     love.graphics.setColor(1, 1, 1)
     love.graphics.setFont(love.graphics.newFont('font_game.ttf', 21))
-    love.graphics.printf(self.currentText, 50, 60 + 35, 800) 
+    love.graphics.printf(self.currentText, 50, 60 + 35-20, 800) 
 
     if self.done then
         love.graphics.setColor(0.8, 0.8, 0.8)
-        love.graphics.printf("Press Enter to continue", 0, 180, 900, "center")
+        love.graphics.printf("Press Enter to continue", 0, 180+30, 900, "center")
     end
 end

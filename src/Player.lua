@@ -40,7 +40,7 @@ function Player:init(x, y)
     self.jumpSpeed = -600 -- upward velocity
     self.gravity = 1500 -- how strong gravity pulls down
     self.dy = 0 -- vertical velocity
-    self.groundY = self.y 
+    self.groundY = self.y
     self.city_x = 0
 
     -- your frame size
@@ -127,7 +127,7 @@ function Player:update(dt)
     elseif self.state == 'jump' then
         self.currentAnimation = self.styles[self.currentStyle].jump
     else
-        print(self.currentStyle)
+        -- print(self.currentStyle)
         self.currentAnimation = self.styles[self.currentStyle].walkRight
     end
 
@@ -142,7 +142,7 @@ function Player:update(dt)
         elseif self.state == 'walkLeft' then
             self.bgx = self.bgx - 10 * dt
         end
-    end 
+    end
 
     if ((self.x > 12000 and self.x <= 16000) and moving == true) then
         if self.state == 'walkRight' then
@@ -203,7 +203,7 @@ function Player:update(dt)
         self.carObj.x = 12000
         self.carPos = 2
         self.carObj.maxX = 16000
-    end 
+    end
 
     if self.carPos == 2 and self.x >= 16500 then
         self.carObj.x = 19600
@@ -253,29 +253,33 @@ function Player:render()
 
     local frameW = 184.2 -- your frame width
 
-    self.currentAnimation:draw(self.spriteSheet, self.x + 100, self.y, 0, -- rotation
-    0.7 * self.direction, -- flip if moving left
-    0.7, -- y scale
-    256 / 2 - 1 * self.direction, -- origin x for flip
-    0 -- origin y
-    )
+    if self.onCar == false then
+        self.currentAnimation:draw(self.spriteSheet, self.x + 100, self.y, 0, -- rotation
+        0.7 * self.direction, -- flip if moving left
+        0.7, -- y scale
+        256 / 2 - 1 * self.direction, -- origin x for flip
+        0 -- origin y
+        )
+    end
 
     love.graphics.setColor(1, 0.8, 0.2)
 
-    if self.x <= 7700 then
-        self.currentAnimation:draw(self.spriteSheet, 8000, self.y, 0, -- rotation
-        0.7 * self.direction, -- flip if moving left
-        0.7, -- y scale
-        256 / 2 - 1 * self.direction, -- origin x for flip
-        0 -- origin y
-        )
-    else
-        self.currentAnimation:draw(self.spriteSheet, math.min(18500,self.x + 300), self.y, 0, -- rotation
-        0.7 * self.direction, -- flip if moving left
-        0.7, -- y scale
-        256 / 2 - 1 * self.direction, -- origin x for flip
-        0 -- origin y
-        )
+    if self.onCar == false then
+        if self.x <= 7700 then
+            self.currentAnimation:draw(self.spriteSheet, 8000, self.y, 0, -- rotation
+            0.7 * self.direction, -- flip if moving left
+            0.7, -- y scale
+            256 / 2 - 1 * self.direction, -- origin x for flip
+            0 -- origin y
+            )
+        else
+            self.currentAnimation:draw(self.spriteSheet, math.min(18500, self.x + 300), self.y, 0, -- rotation
+            0.7 * self.direction, -- flip if moving left
+            0.7, -- y scale
+            256 / 2 - 1 * self.direction, -- origin x for flip
+            0 -- origin y
+            )
+        end
     end
 
     love.graphics.setColor(1, 1, 1)

@@ -128,18 +128,19 @@ function QuestionSet:render()
     love.graphics.setFont(love.graphics.newFont('font_game.ttf',21))
 
     if self.transactionComplete then
-        love.graphics.printf("Transaction COMPLETE! Remaining money: " .. self.player.money ..
-                                 " | Press Enter to continue.", 50, 100+ 35, 800, "center")
+        love.graphics.printf("Transaction COMPLETE!    Remaining money: " .. self.player.money, 50, 100+ 35, 800, "center") 
+        love.graphics.printf("Press Enter to continue.", 50, 100+ 35+50, 800, "center")
         hooting = true
     elseif self.failed then
-        love.graphics.printf("Transaction FAILED! Not enough money: " .. self.player.money ..
-                                 " | Press Enter to continue.", 50, 100+ 35, 800, "center")
+        love.graphics.printf("Transaction FAILED! Not enough money: " .. self.player.money, 50, 100+ 35, 800, "center")
+        love.graphics.printf("Press Enter to continue.", 50, 100+ 35+50, 800, "center")
     elseif self.cancelled then
-        love.graphics.printf("No Transaction Performed! Press Enter to continue.", 50, 100+ 35, 800, "center")
+        love.graphics.printf("No Transaction Performed! ", 50, 100+ 35, 800, "center")
+        love.graphics.printf("Press Enter to continue.", 50, 100+ 35+50, 800, "center")
     else
         love.graphics.printf(self.currentText, 50, 50+ 35, 800)
         local price = self.questions[self.currentIndex].price
-        love.graphics.printf("Price: Rs " .. price, 50, 140, 800)
+        love.graphics.printf("Price: Rs " .. price, 50, 140+20, 800)
         if self.done then
             love.graphics.setColor(0.8, 0.8, 0.8)
             love.graphics.printf("[Y] Yes    [N] No", 0, 160, 900, "center")
@@ -156,7 +157,7 @@ function QuestionSet:performTransaction()
         self.transactionComplete = true 
         table.insert(self.player.purchased, self.currentIndex)
         for key,value in pairs(self.player.purchased) do
-            print(key.." "..value)    
+           -- print(key.." "..value)    
             if self.currentIndex == 13 and value == 13 then 
                 self.player.carTriggered = true 
                 self.player.carReached = false

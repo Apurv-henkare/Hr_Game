@@ -25,15 +25,16 @@ signs = {
         { x = 4050, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
         { x = 5500, y = 200, text = "2 Km left\nKeep moving, step by step!" },
         { x = 6200, y = 200, text = "Almost there!\nFeel the energy, keep going!" },
-        { x = 6900, y = 200, text = "You made it!\nCelebrate your effort 🎉" },
-        { x = 13900, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
+        { x = 6900, y = 200, text = "You made it!\nCelebrate your effort!!" },
+        { x = 13000, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
         { x = 14500, y = 200, text = "2 Km left\nKeep moving, step by step!" },
         { x = 15500, y = 200, text = "Almost there!\nFeel the energy, keep going!" },
-        { x = 16000, y = 200, text = "You made it!\nCelebrate your effort 🎉" },
+        { x = 16000, y = 200, text = "You made it!\nCelebrate your effort !!!" },
          { x = 20200, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
         { x = 21000, y = 200, text = "2 Km left\nKeep moving, step by step!" },
         { x = 21700, y = 200, text = "Almost there!\nFeel the energy, keep going!" },
-        { x = 22900, y = 200, text = "You made it!\nCelebrate your effort 🎉" }
+        { x = 22900, y = 200, text = "You made it!\nCelebrate your effort !!!" },
+        { x = 25000, y = 200, text = "Keep moving Right!\n You Almost There !!!" }
     } 
 
 fans = {
@@ -282,7 +283,7 @@ function PlayState:update(dt)
         end
     end
 
-    if love.keyboard.wasPressed('l') or self.player.x >= 25800 then
+    if self.player.x >= 25800 then
         gStateStack:pop()
         gStateStack:push(End(self.player.purchased, self.player.money))
     end
@@ -520,7 +521,7 @@ function PlayState:render()
 
     -- motivational blocks
     for _, s in ipairs(signs) do
-        local w, h, r = 220, 80, 14
+        local w, h, r = 220, 100, 14
         local dist = math.abs(self.player.x - s.x)
         local glow = math.max(0, 1 - dist / 200)
 

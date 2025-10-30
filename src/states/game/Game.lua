@@ -108,6 +108,7 @@ function Game:render()
 
     -- Score text
     love.graphics.setColor(0,1,1)
+    love.graphics.printf("Arrow Left/Right Space to Shoot",900/2-230,50,500,"center")
     love.graphics.print("SCORE: "..self.score, self.gameX, self.gameY - 30) 
     love.graphics.print("Max 10: "..self.score, self.gameX+400, self.gameY - 30)
 end

@@ -66,7 +66,7 @@ end
 
 function Car:render()
     love.graphics.setColor(1, 1,1)
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+    --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
     self.currentAnimation:draw(self.spriteSheet, self.x -100, self.y-100, 0, -- rotation
     4, -- flip if moving left
     4, -- y scale
