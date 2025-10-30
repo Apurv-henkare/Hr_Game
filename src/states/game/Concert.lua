@@ -1,7 +1,7 @@
 Concert = Class { __includes = BaseState }
 
 function Concert:init()
-    self.image = love.graphics.newImage('Image/move.jpg')
+    self.image = love.graphics.newImage('Image/club.jpeg')
 
     -- start fully visible
     self.alpha = 1
@@ -45,7 +45,7 @@ function Concert:render()
     love.graphics.setColor(0,0,0)
     love.graphics.rectangle('fill',0,0,900,600)
     love.graphics.setColor(1, 1, 1, self.alpha)
-    love.graphics.draw(self.image, 0, 0,0,1,2)
+    love.graphics.draw(self.image, 0, 0,0,0.7,0.8)
     love.graphics.setColor(1, 1, 1, 1) -- reset color 
     love.graphics.setColor(1,1,1)
 end

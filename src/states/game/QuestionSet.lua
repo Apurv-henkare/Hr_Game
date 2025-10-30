@@ -118,7 +118,7 @@ end
 
 -- Render dialogue box
 function QuestionSet:render()
-    love.graphics.setColor(0, 0, 0, 0.7)
+    love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", 30, 30, 840, 200, 12)
 
     love.graphics.setColor(1, 1, 1)

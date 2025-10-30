@@ -7,7 +7,7 @@ function Girl:init(x, y)
     self.happy= false
     self.isJumping = false
     
-    self.x = 19500
+    self.x = 19000
     self.y= WINDOW_HEIGHT - 16 * 6 - 50 - 70
     self.jumpSpeed = -600 -- upward velocity
     self.gravity = 1500 -- how strong gravity pulls down

@@ -3,7 +3,8 @@ PlayState = Class {
 }
 time = 0
 collision_obj = {
-    { x = 1751 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 1 },
+    { x = 1751 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 1 }, 
+    { x = 24100 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 2 },
     {x = 16920 , y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 3},
     { x = 8864 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 4 },
     { x = 17970, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 5 },
@@ -13,10 +14,12 @@ collision_obj = {
     { x = 8239 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 9 },
     { x = 10698 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 10 },
     { x = 10089 + 40, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 11 },
-    { x = 19500, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 12 },
+    { x = 18900, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70 - 60, width = 100, height = 50 + 50, key = 12 },
     { x = 3400, y = WINDOW_HEIGHT - 16 * 4 - 40, width = 400, height = 250, key = 13, choice = false },
     { x = 12100, y = WINDOW_HEIGHT - 16 * 4 - 40, width = 400, height = 250, key = 13, choice = false },
-    { x = 736, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70, width = 50, height = 70, key = 14 }
+    { x = 19600, y = WINDOW_HEIGHT - 16 * 4 - 40, width = 400, height = 250, key = 13, choice = false },
+    { x = 736, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70, width = 50, height = 70, key = 14 },
+    { x = 24600, y = WINDOW_HEIGHT - 16 * 6 - 50 - 70, width = 50, height = 70, key = 15 }
 }
 signs = {
         { x = 4050, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
@@ -26,7 +29,11 @@ signs = {
         { x = 13900, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
         { x = 14500, y = 200, text = "2 Km left\nKeep moving, step by step!" },
         { x = 15500, y = 200, text = "Almost there!\nFeel the energy, keep going!" },
-        { x = 16000, y = 200, text = "You made it!\nCelebrate your effort 🎉" }
+        { x = 16000, y = 200, text = "You made it!\nCelebrate your effort 🎉" },
+         { x = 20200, y = 200, text = "4 Km left\nYou’re stronger than you think!" },
+        { x = 21000, y = 200, text = "2 Km left\nKeep moving, step by step!" },
+        { x = 21700, y = 200, text = "Almost there!\nFeel the energy, keep going!" },
+        { x = 22900, y = 200, text = "You made it!\nCelebrate your effort 🎉" }
     } 
 
 fans = {
@@ -115,6 +122,7 @@ function PlayState:init()
     self.concert = false
     self.bot = false
     self.sunset = 0
+    self.game = false
     local startX = 3000
     local endX = 7300
     local gap = 500
@@ -128,6 +136,13 @@ function PlayState:init()
     end
 
     for x = 12000, 16000, gap do
+        table.insert(lamps, {
+            x = x,
+            y = baseY
+        })
+    end 
+
+    for x = 19500, 23000, gap do
         table.insert(lamps, {
             x = x,
             y = baseY
@@ -206,12 +221,15 @@ function PlayState:update(dt)
         cam:lookAt(2900, WINDOW_HEIGHT / 2)
     elseif (self.player.x >= 2900 and self.player.x < 7000) then
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
-    elseif (self.player.x >= 7000) then
+    elseif (self.player.x >= 7000 and self.player.x<18900) then
         self.player.maxX = 7000
-        self.player.minX = 30000
+        self.player.minX = 18900
         cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
-    end
-
+    elseif (self.player.x >= 18900) then 
+        self.player.maxX = 18900
+        self.player.minX = 26900
+        cam:lookAt(self.player.x, WINDOW_HEIGHT / 2)
+    end 
     if love.keyboard.wasPressed('r') then
         gStateStack:push(QuestionSet(3, self.player))
     end
@@ -239,6 +257,12 @@ function PlayState:update(dt)
             self.movie1 = true
             -- self.carTriggered = true
             gStateStack:push(Movie())
+        end 
+
+        if value == 15 and self.game == false then
+            self.game = true
+            -- self.carTriggered = true
+            gStateStack:push(Game())
         end
         if value == 7 then
             self.player.gadget = true
@@ -258,7 +282,7 @@ function PlayState:update(dt)
         end
     end
 
-    if love.keyboard.wasPressed('l') or self.player.x >= 30000 then
+    if love.keyboard.wasPressed('l') or self.player.x >= 25800 then
         gStateStack:pop()
         gStateStack:push(End(self.player.purchased, self.player.money))
     end
@@ -387,7 +411,8 @@ function PlayState:render()
         -- solid moon
         love.graphics.setColor(1, 1, 0.9, 1)
         love.graphics.circle("fill", moonX, moonY, moonRadius)
-        love.graphics.draw(self.jungle, 0 - self.player.bgx, 100)
+        love.graphics.setColor(0.3, 0.5, 0.5, 1)
+        love.graphics.draw(self.city, 0 - self.player.bgx, 100)
     end
 
     -- love.graphics.setColor(1, 1, 1, 1)
@@ -458,7 +483,7 @@ function PlayState:render()
 
     love.graphics.setColor(1, 1, 1)
     for i, value in pairs(vegetables) do
-        love.graphics.rectangle('line', value.x, value.y, value.width, value.height)
+        --love.graphics.rectangle('line', value.x, value.y, value.width, value.height)
     end 
 
     -- simple ground
@@ -491,10 +516,52 @@ function PlayState:render()
         love.graphics.draw(self.lampImage, value.x, value.y, 0, 1, 1)
     end
     -- love.graphics.print(self.player.x,200,200) 
-    love.graphics.print("heloo", 3400, 200)
+    --love.graphics.print("heloo", 3400, 200)
     cam:detach()
 
-    -- love.graphics.print(self.player.x, 200, 200)
+     --love.graphics.print(self.player.x, 200, 200) 
+
+     local barW, barH = 220, 32
+    local barX = 900 - barW - 20
+    local barY = 20
+    local moneyW = (self.player.money / 10000) * barW
+
+    -- Background
+    love.graphics.setColor(0, 0, 0, 0.45)
+    love.graphics.rectangle("fill", barX, barY, barW, barH, 10, 10)
+
+    -- Border (outer dark thin line)
+    love.graphics.setColor(0, 0.5, 0, 0.9)
+    love.graphics.setLineWidth(4)
+    love.graphics.rectangle("line", barX, barY, barW, barH, 10, 10)
+
+    -- Gold fill
+    love.graphics.setColor(0, 0.9, 0, 1)
+    love.graphics.rectangle("fill", barX, barY, moneyW, barH, 10, 10)
+
+    -- Gold border (inner shiny rim)
+    love.graphics.setColor(0, 0.5, 0)
+    love.graphics.setLineWidth(2)
+    love.graphics.rectangle("line", barX, barY, moneyW, barH, 10, 10)
+
+    -- Gloss top
+    love.graphics.setColor(1, 1, 1, 0.25)
+    love.graphics.rectangle("fill", barX, barY, moneyW, barH/2, 10, 10)
+
+    -- Coin icon
+    local cx = barX - 28
+    local cy = barY + barH/2
+    love.graphics.setColor(1, 0.9, 0.2, 0.35)
+    love.graphics.circle("fill", cx, cy, 13)
+    love.graphics.setColor(1, 0.85, 0.1)
+    love.graphics.circle("fill", cx, cy, 10)
+
+    -- love.graphics.setColor(0, 0, 0)
+    -- love.graphics.printf("Rs", cx-6+10, cy-9, 12, "center")
+
+    -- Text
+    love.graphics.setColor(1, 1, 1, 0.85)
+    love.graphics.printf("Rs"..self.player.money, barX, barY + 5, barW, "center")
 
     -- love.graphics.print("Use arrow keys to move, 1–15 to change style", 10, 10)
 
