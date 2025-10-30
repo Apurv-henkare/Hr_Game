@@ -75,6 +75,7 @@ function Player:update(dt)
     -- Movement and jumping
     if love.keyboard.wasPressed and love.keyboard.wasPressed('space') and not self.isJumping then
         -- Jump start
+        playJumpSound()
         self.isJumping = true
         self.dy = self.jumpSpeed
         self.state = 'jump'

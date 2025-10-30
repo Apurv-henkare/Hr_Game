@@ -36,7 +36,8 @@ function MainMenu:update(dt)
     end
 
     -- Start game
-    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then 
+        activateAudio()
         gStateStack:pop()
         gStateStack:push(PlayState())
     end

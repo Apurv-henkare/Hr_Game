@@ -4,7 +4,6 @@ QuestionSet = Class {
 
 function QuestionSet:init(startIndex, player)
     self.player = player -- store player object
-
     self.questions = {{
         text = "Bought a cute dress nice T-shirt during a Myntra Sale on a great deal?",
         price = 800,
@@ -118,22 +117,25 @@ end
 
 -- Render dialogue box
 function QuestionSet:render()
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.rectangle("fill", 30, 30, 840, 200, 12)
+    love.graphics.setColor(0.2, 0.2, 0.2, 0.98)
+    love.graphics.rectangle("fill", 30-5, 30+ 35-5, 840+10, 200+10, 12) 
+    love.graphics.setColor(0, 0, 0, 0.98)
+    love.graphics.rectangle("fill", 30, 30+ 35, 840, 200, 12)
 
     love.graphics.setColor(1, 1, 1)
-    love.graphics.setFont(love.graphics.newFont(18))
+    love.graphics.setFont(love.graphics.newFont('font_game.ttf',21))
 
-    if self.transactionComplete then 
+    if self.transactionComplete then
         love.graphics.printf("Transaction COMPLETE! Remaining money: " .. self.player.money ..
-                                 " | Press Enter to continue.", 50, 100, 800, "center")
+                                 " | Press Enter to continue.", 50, 100+ 35, 800, "center")
+        hooting = true
     elseif self.failed then
         love.graphics.printf("Transaction FAILED! Not enough money: " .. self.player.money ..
-                                 " | Press Enter to continue.", 50, 100, 800, "center")
+                                 " | Press Enter to continue.", 50, 100+ 35, 800, "center")
     elseif self.cancelled then
-        love.graphics.printf("No Transaction Performed! Press Enter to continue.", 50, 100, 800, "center")
+        love.graphics.printf("No Transaction Performed! Press Enter to continue.", 50, 100+ 35, 800, "center")
     else
-        love.graphics.printf(self.currentText, 50, 50, 800)
+        love.graphics.printf(self.currentText, 50, 50+ 35, 800)
         local price = self.questions[self.currentIndex].price
         love.graphics.printf("Price: Rs " .. price, 50, 140, 800)
         if self.done then

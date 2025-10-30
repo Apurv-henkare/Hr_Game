@@ -290,7 +290,31 @@ function PlayState:update(dt)
     if self.player.x >= 13000 then
         self.sunset = math.min(250, self.sunset + 10 * dt)
 
-    end
+    end 
+
+    for i=#successBursts,1,-1 do
+        local b = successBursts[i]
+        b.timer = b.timer - dt
+        
+        for _,p in ipairs(b.particles) do
+            p.vx = math.cos(p.angle) * p.speed
+            p.vy = math.sin(p.angle) * p.speed + p.gravity
+            
+            p.x = p.x + p.vx * dt
+            p.y = p.y + p.vy * dt
+            
+            p.alpha = math.max(0, p.alpha - dt * 0.6)
+        end
+        
+        if b.timer <= 0 then table.remove(successBursts, i) end
+    end 
+
+    if hooting == true then 
+        triggerTransactionAnimation(self.player.x+256 * 0.7/2, self.player.y+256/2)   
+       -- print(#successBursts) 
+       playMoneySound()
+        hooting =false
+    end 
 end
 
 local function hsvToRgb(h, s, v)
@@ -508,6 +532,25 @@ function PlayState:render()
         love.graphics.setColor(0.1, 0.1, 0.1)
         love.graphics.printf(s.text, s.x - w / 2 + 10, s.y + 20, w - 20, "center")
     end
+    love.graphics.setColor(1,1,1) 
+    for _,b in ipairs(successBursts) do
+        for _,p in ipairs(b.particles) do
+            
+            local rcbColors = {
+                {0.92, 0.00, 0.16}, -- Red
+                {0.83, 0.68, 0.14}, -- Gold
+                {0, 0, 0},          -- Black
+                {1, 1, 1},          -- White
+                {0.64, 0.03, 0.05}, -- Dark Red
+                {0.11, 0.16, 0.25}  -- Navy (rare jersey accent)
+            }
+
+            local col = rcbColors[math.random(#rcbColors)]
+            love.graphics.setColor(col[1], col[2], col[3], p.alpha)
+            love.graphics.circle("fill", p.x, p.y, p.size)
+        end
+    end
+
     love.graphics.setColor(1,1,1)
     self.player:render() 
     self.girl:render()

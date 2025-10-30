@@ -58,7 +58,7 @@ function End:render()
     love.graphics.setColor(0, 0, 0, self.alpha)
     local statsY = VIRTUAL_HEIGHT * 0.58
 
-    love.graphics.printf("Total Money Spent:", VIRTUAL_WIDTH * 0.25, statsY, VIRTUAL_WIDTH * 0.5, 'left')
+    love.graphics.printf("Total Money Left:", VIRTUAL_WIDTH * 0.25, statsY, VIRTUAL_WIDTH * 0.5, 'left')
     love.graphics.printf(tostring(self.data.money), VIRTUAL_WIDTH * 0.55, statsY, VIRTUAL_WIDTH * 0.2, 'right')
 
     -- Footer tip

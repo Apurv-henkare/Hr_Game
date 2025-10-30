@@ -1,9 +1,67 @@
 require 'src/Dependencies'
+started = false 
 
-local screenWidth, screenHeight = love.window.getDesktopDimensions()
+local screenWidth, screenHeight = love.window.getDesktopDimensions()  
+successBursts = {}
+
+
+-- Function to unlock + play sound
+function activateAudio()
+    if not started then
+        started = true
+        bgm:play()
+    end
+end 
+
+
+function playJumpSound()
+    jumpSound:stop()  -- reset sound
+    jumpSound:play()  -- play from start
+end   
+
+function playMoneySound()
+    moneySound:stop()  -- reset sound
+    moneySound:play()  -- play from start
+end  
+
+
+hooting = false 
+
+function triggerTransactionAnimation(x, y)
+    local burst = {
+        x = x, y = y,
+        particles = {},
+        timer = 1.0 -- little longer
+    }
+
+    for i=1,50 do
+        table.insert(burst.particles, {
+            x = x, y = y,
+            angle = math.rad(math.random(0,360)),
+            speed = math.random(150,300),
+            alpha = 1,
+            size = math.random(4,9),
+            gravity = math.random(30,80) / 100,
+            vx = 0,
+            vy = 0
+        })
+    end 
+
+   
+
+    table.insert(successBursts, burst)
+end 
+
+
 
 function love.load() 
-    math.randomseed(os.time())
+    math.randomseed(os.time())  
+    bgm = love.audio.newSource("music/bg_music_1.wav", "static") 
+    jumpSound = love.audio.newSource("music/jump.wav", "static") 
+    moneySound = love.audio.newSource("music/wow.wav", "static") 
+    moneySound:setVolume(0.1)
+    bgm:setVolume(0.1)
+    bgm:setLooping(true)
 
     local screenWidth, screenHeight = love.window.getDesktopDimensions()
 
