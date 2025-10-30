@@ -4,67 +4,69 @@ QuestionSet = Class {
 
 function QuestionSet:init(startIndex, player)
     self.player = player -- store player object
-    self.questions = {{
-        text = "Bought a cute dress nice T-shirt during a Myntra Sale on a great deal?",
+    self.questions = {
+    {
+        text = "Snagged a cute dress and a trendy tee during the Myntra Sale  couldn't resist that deal!",
         price = 800,
         category = "Fashion"
     }, {
-        text = "Ordered food on Swiggy, because food at home was boring?",
+        text = "Ordered Swiggy because home food just wasn't vibing today!",
         price = 300,
         category = "Food and Lifestyle"
     }, {
-        text = "Bought something from an ad on Instagram because it caught your eye?",
+        text = "Clicked 'Buy Now' on an Insta ad that totally caught your eye  no regrets!",
         price = 500,
         category = "Lifestyle"
     }, {
-        text = "Purchased the same dress your friend wore at a party to match their style?",
+        text = "Matched your friend's party look by buying the same dress  twinning goals!",
         price = 1000,
         category = "Fashion"
     }, {
-        text = "Went to a concert only because your friends were going?",
+        text = "Went to a concert just because your squad was going  FOMO wins!",
         price = 1200,
         category = "Lifestyle"
     }, {
-        text = "Rewatched a movie in the theatre to accompany a friend?",
+        text = "Rewatched a movie in theatres just to hang out with a friend  memories matter!",
         price = 400,
         category = "Lifestyle"
     }, {
-        text = "Bought a gadget during Amazon Big Bang Sale because of the mega discount?",
+        text = "Scored a gadget during Amazon's Big Bang Sale  mega discount magic!",
         price = 1500,
         category = "Tech"
     }, {
-        text = "Spent extra to waive off credit card charges?",
+        text = "Paid extra to waive off credit card charges  peace of mind, right?",
         price = 600,
         category = "Lifestyle"
     }, {
-        text = "Got a Starbucks coffee while waiting for a friend?",
+        text = "Grabbed a Starbucks while waiting for a friend  treat yourself!",
         price = 350,
         category = "Food and Lifestyle"
     }, {
-        text = "Tried a new hair treatment because your hairdresser recommended it?",
+        text = "Tried a new hair treatment because your stylist swore by it  self-care unlocked!",
         price = 900,
         category = "Health"
     }, {
-        text = "Bought a cookie at the mall because of a sudden sweet craving?",
+        text = "Picked up a cookie at the mall thanks to a sudden sweet craving  yum!",
         price = 150,
         category = "Food and Lifestyle"
     }, {
-        text = "Gave a gift to a child on impulse?",
+        text = "Gave a spontaneous gift to a child  heartwarming impulse!",
         price = 500,
         category = "Lifestyle"
     }, {
-        text = "Took a cab or rickshaw instead of walking a short distance?",
+        text = "Took a cab or rickshaw instead of walking  comfort first!",
         price = 200,
         category = "Lifestyle"
     }, {
-        text = "Bought vegetables just because they were cheap?",
+        text = "Bought veggies just because they were super cheap  who doesn't love a bargain?",
         price = 100,
         category = "Food and Lifestyle"
     }, {
-        text = "Spent money on online games after hitting a limit, just to keep playing?",
+        text = "Spent on online games after hitting a limit  just had to keep playing!",
         price = 700,
         category = "Tech"
-    }}
+    }
+}
 
     self.currentIndex = startIndex or 1
     self.currentText = ""
