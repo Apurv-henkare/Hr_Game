@@ -7,7 +7,7 @@ function End:init(question, amount)
         money = amount or 0
     }
 
-    self.title = "GAME OVER"
+    self.title = "WELL DONE !!"
     self.subtitle = "Press Enter to Submit Your Score"
     self.alpha = 0 -- for fade-in animation
 
