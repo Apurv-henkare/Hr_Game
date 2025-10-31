@@ -565,7 +565,7 @@ function PlayState:render()
 
      --love.graphics.print(self.player.x, 200, 200) 
 
-     local barW, barH = 220, 32
+    local barW, barH = 220, 32
     local barX = 900 - barW - 20
     local barY = 20
     local moneyW = (self.player.money / 10000) * barW
@@ -605,7 +605,80 @@ function PlayState:render()
 
     -- Text
     love.graphics.setColor(1, 1, 1, 0.85)
-    love.graphics.printf("Rs"..self.player.money, barX, barY + 5, barW, "center")
+    love.graphics.printf("Rs"..self.player.money, barX, barY + 5, barW, "center") 
+
+    -- === GAME PROGRESS BAR (Left Side) ===
+local pBarW, pBarH = 220, 32
+local pBarX = 20  -- left side
+local pBarY = 20-4
+
+local maxDistance = 25800
+local progress = math.min(self.player.x / maxDistance, 1) -- avoid overflow
+local pFillW = progress * pBarW
+
+-- Background
+love.graphics.setColor(0, 0, 0, 0.45)
+love.graphics.rectangle("fill", pBarX, pBarY, pBarW, pBarH, 10, 10)
+
+-- Outer border
+love.graphics.setColor(0, 0.2, 0.8, 0.9) -- blue tone for progress bar
+love.graphics.setLineWidth(4)
+love.graphics.rectangle("line", pBarX, pBarY, pBarW, pBarH, 10, 10)
+
+-- Fill
+love.graphics.setColor(0, 0.6, 1, 1)
+love.graphics.rectangle("fill", pBarX, pBarY, pFillW, pBarH, 10, 10)
+
+-- Inner rim
+love.graphics.setColor(0, 0.4, 1)
+love.graphics.setLineWidth(2)
+love.graphics.rectangle("line", pBarX, pBarY, pFillW, pBarH, 10, 10)
+
+-- Gloss top
+love.graphics.setColor(1, 1, 1, 0.25)
+love.graphics.rectangle("fill", pBarX, pBarY, pFillW, pBarH/2, 10, 10)
+
+-- Progress icon (small circle)
+local px = pBarX + pBarW + 18
+local py = pBarY + pBarH/2
+love.graphics.setColor(0, 0.7, 1, 0.3)
+--love.graphics.circle("fill", px, py, 13)
+love.graphics.setColor(0, 0.7, 1)
+--love.graphics.circle("fill", px, py, 10)
+
+-- Text
+love.graphics.setColor(1, 1, 1, 0.85)
+love.graphics.printf(
+    string.format("Progress %d%%", math.floor(progress * 100)),
+    pBarX, pBarY + 5, pBarW, "center"
+)  
+
+-- === MOVING RIGHT ARROW ANIMATION ===
+local arrowTrackW = 60       -- width of arrow movement lane
+local speed = 1              -- arrow movement speed
+local t = love.timer.getTime() * speed
+
+-- looping 0 → arrowTrackW
+local offset = (t % 1) * arrowTrackW   
+
+-- arrow position start (right of progress bar)
+local baseX = pBarX + pBarW + 40 
+local baseY = pBarY + pBarH/2
+
+-- arrow draw position
+local x = baseX + offset
+local y = baseY
+
+-- arrow shape points (triangle)
+local size = 18
+local x1, y1 = x - size, y - size * 0.6
+local x2, y2 = x + size, y
+local x3, y3 = x - size, y + size * 0.6
+
+love.graphics.setColor(0, 0.7, 1, 1)
+love.graphics.polygon("fill", x1, y1, x2, y2, x3, y3)
+
+love.graphics.setColor(1, 1, 1, 1)
 
     -- love.graphics.print("Use arrow keys to move, 1–15 to change style", 10, 10)
 

@@ -205,7 +205,7 @@ function Player:update(dt)
         self.carObj.maxX = 16000
     end
 
-    if self.carPos == 2 and self.x >= 16500 then
+    if self.carPos == 2 and self.x >= 16900 then
         self.carObj.x = 19600
         self.carPos = 3
         self.carObj.maxX = 23000
